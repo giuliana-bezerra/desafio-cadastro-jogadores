@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Cadastro de Jogador</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="mt-5">Cadastro de Jogador</h1>
+
+    <form th:action="@{/cadastro-jogador}" th:method="post" th:object="${jogador}">
+      <!-- Campo Nome (Obrigatório) -->
+      <!-- O *{} é para se referir a um atributo do th:object do form. -->
+      <!-- O ${#fields} acessa o objeto fields para manipular campos do form. -->
+      <div>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" th:field="*{nome}" required>
+        <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Nome é obrigatório</div>
+      </div>
+
+      <!-- Campo E-mail (Obrigatório e válido) -->
+      <div>
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" th:field="*{email}" required>
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">E-mail inválido</div>
+      </div>
+
+      <!-- Campo Telefone (Opcional) -->
+      <div>
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" th:field="*{telefone}">
+      </div>
+
+      <!-- Grupo de RadioButton para selecionar Codinome -->
+      <div>
+        <label>Escolha um Grupo de Codinome:</label>
+        <div th:each="grupo : ${gruposCodinomes}">
+          <input type="radio" th:field="*{grupoCodinome}" th:value="${grupo.name()}" th:id="${grupo.name()}" required>
+          <label th:for="${grupo.name()}" th:text="${grupo.getNome()}"></label>
+        </div>
+        <div th:if="${#fields.hasErrors('grupoCodinome')}" th:errors="*{grupoCodinome}">Seleção de grupo de codinome é
+          obrigatória</div>
+      </div>
+
+      <!-- Botão de Cadastrar -->
+      <div>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+        <!-- Botão para listar jogadores -->
+        <a th:href="@{/listagem-jogadores}" class="btn btn-primary">Listar Jogadores</a>
+      </div>
+
+      <!-- Exibir Mensagens de Erro -->
+      <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}" style="color: red;"></p>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>
